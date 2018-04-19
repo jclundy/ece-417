@@ -36,26 +36,23 @@ end
 %2 ) For each pixel, evaluate similarity of pixel to every pixel in image
 for x1 = 1:m
     for y1 = 1:n
-        V_pixel = V_m_n(x1,y1);
+        V_pixel = V_m_n(x1,y1,:);
         weights = zeros(m, n);
         for x2 = 1:m
             for y2 = 1:n
-                V_other_pixel = V_m_n(x2,y2);
-                weights(x2, y2) = evaluate_weight(1, V_pixel, V_other_pixel, h);
+                V_other_pixel = V_m_n(x2,y2,:);
+                weights(x2, y2) = evaluate_weight(1, V_pixel, V_other_pixel,h);
             end
         end
         weights_flattened = weights(:);
-        max_w = max(weights_flattened);
-        min_w = min(weights_flattened);
         C = sum(weights_flattened);
-        weights = weights * 1/C;
-        
+        weights_flattened = weights_flattened / C;
         f_filtered(x1,y1) = dot(weights_flattened,f_flattened);
     end
 end
-max_f = max(f_filtered);
-min_f = min(f_filtered);
-f_filtered = (f_filtered - min_f) / max_f; 
+%max_f = max(f_filtered);
+%min_f = min(f_filtered);
+%f_filtered = (f_filtered - min_f) / max_f; 
 figure(3)
 imshow(f_filtered)
 
