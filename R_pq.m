@@ -1,10 +1,9 @@
 function R = R_pq(p, q, rho)
-sum = 0;
-for k =abs(q):p
-    diff_p = round(abs(p - k) / 2);
-    diff_q = round(abs(k - q) / 2);
-    sum_q = round(abs(k + q)/2);
-    sum_p = round(abs(p + k) / 2);
-    sum = sum + -1^diff_p * factorial(sum_p)/(factorial(diff_p) * factorial(diff_q) *factorial(sum_q)) * rho^k;
+R = zeros(size(rho));
+for k = 0:(p-abs(q))/2
+    Sum = ((-1)^k)*factorial(p-k)/(factorial(k)*factorial((p+abs(q))/2-k)*factorial((p-abs(q))/2-k));
+    R = R + Sum*rho.^(p-2*k);
 end
-R = sum;
+R(isnan(R))=0;
+R = (rho~=0).*R;
+R = R/5;
