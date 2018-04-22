@@ -50,14 +50,54 @@
 %% 3) Data Sources
 % The test image used was Lena.  The image is then corrupted with WGN noise
 % with variance between 5, and 100.
+clc;
+clear all;
+close all;
+
+original = imread('lena_256x256.ppm');
+original = original(:,:,1);
 
 %% 4) Solution
 
+% Add white gaussian noise
+sigma = [5, 10, 20, 30, 50, 75, 100] / 100;
+p = [0, 1, 2, 2, 3, 3];
+q = [0, 1, 0, 2, 1, 3];
+noisy_image = imnoise(original, 'gaussian', 0, 0.002);
+
+% Compute the various Zernike moments and use them to denoise the image
+tic;
+[newImage, moments] = Zernike_moment(noisy_image, p, q);
+toc;
+
+% Calculate the psnr of the noisy image compared to the filtered image
+noisy_image_psnr = psnr(noisy_image, original)
+filtered_image_psnr = psnr(newImage, original)
 %% 5) Visualization
 
+figure()
+imshow(original)
+title('Original')
+
+figure()
+imshow(noisy_image)
+title('Noisy Image')
+
+displayZernikeMoments(moments, p, q);
+
+
+figure()
+imshow(newImage);
+title('Image after Zernike Moment Filtering Applied');
 %% 6) Analysis and conclusions
-% Reproducing the results
-% Predictability of the algorithm
-% Our conclusions
-% Drawbacks of the solution
+% We were able to reproduce the filtering effects on the image Lena.jpg.
+% The paper reported a PSNR of 32.29 for their method w, when applied on a 
+% noisy image with PSNR of 22.16.  Our implementation resulted in a PSNR of
+% 26.0181 (filtered_image_psnr).  The noisy image had a PSNR of 27.0220 (nois.
+% 
+% The algorithm is fairly predictable in terms of how the zernike moments
+% of different images appear. As well, the algorithm is entirely
+% deterministic.  
+% The major drawback of this algorithm is the slow performance.  For an nxn
+% image, the algorithm took XXX seconds to complete.
 %% 7) List of source functions

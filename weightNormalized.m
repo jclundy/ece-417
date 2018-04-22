@@ -1,6 +1,21 @@
 function newImage = weightNormalized(image, zernikeMoments, h)
+% This function normalizes the weighting of the Zernike moments and
+% performs the nonlocal filtering of the noisy image.  The algorithm 
+% calculates the simularity measure of the pixel relative to its 
+% surrounding pixels and assigns it a weight according based on the 
+% simularity.  A window size of 21 was used as suggested in the original
+% paper.
+% Inputs:
+% image - The noisy image to be denoised
+% zernikeMoments - An array of zernikeMoments for the image
+% h - degree of filtering parameter
+
 m = size(zernikeMoments, 1);
 n = size(zernikeMoments, 2);
+
+zernikeMoments(:,:,3) = zernikeMoments(:,:,3)./zernikeMoments(:,:,1);
+zernikeMoments(:,:,5) = zernikeMoments(:,:,5)./zernikeMoments(:,:,2);
+
 newImage = zeros(m, n);
 for x1 = 1:m
     for y1 = 1:n
@@ -22,12 +37,12 @@ for x1 = 1:m
                 if(y2 > n)
                     y2 = 2*n - y2;
                 end
-                V_other_pixel = zernikeMoments(x2,y2,:);
-                weights(x2, y2) = evaluate_weight(1, V_pixel, V_other_pixel,h);
+                v_other_pixel = zernikeMoments(x2,y2,:);
+                weights(x2, y2) = evaluate_weight(1, V_pixel, v_other_pixel,h);
             end
         end
-        C = sum(sum(weights, 1), 2);
-        weights = weights / C;
+        c = sum(sum(weights, 1), 2);
+        weights = weights / c;
         newImage(x1, y1) = sum(dot(double(image), weights));
     end
 end

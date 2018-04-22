@@ -1,9 +1,18 @@
-function R = R_pq(p, q, rho)
-R = zeros(size(rho));
+function r = R_pq(p, q, rho)
+% -------------------------------------------------------------------------
+% This function takes in an array of radii, order and repetition and
+% outputs the corresponding radial polynomial
+% Inputs:
+% p - An array of Zernike orders
+% q - An array of repetitions
+% rho - A matrix of radius lengths
+
+r = zeros(size(rho));
 for k = 0:(p-abs(q))/2
-    Sum = ((-1)^k)*factorial(p-k)/(factorial(k)*factorial((p+abs(q))/2-k)*factorial((p-abs(q))/2-k));
-    R = R + Sum*rho.^(p-2*k);
+    temp = ((-1)^k)*factorial(p-k)/(factorial(k)*factorial((p+abs(q))...
+        /2-k)*factorial((p-abs(q))/2-k));
+    r = r + temp*rho.^(p-2*k);
 end
-R(isnan(R))=0;
-R = (rho~=0).*R;
-R = R/5;
+r(isnan(r))=0;
+r = (rho~=0).*r;
+end
