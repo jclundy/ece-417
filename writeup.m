@@ -57,7 +57,19 @@
 
 %% 6) Analysis and conclusions
 % Reproducing the results
+% 
 % Predictability of the algorithm
 % Our conclusions
 % Drawbacks of the solution
+
+% We were able to reproduce the filtering effects on the image Lena.jpg.
+% The paper reported a PSNR of XXX for their method w, when applied on a 
+% noisy image with sigma = 20.  Our implementation resulted in a PSNR of
+% XXX.  The noisy image had a PSNR of XXX.
+% 
+% The algorithm is fairly predictable in terms of how the zernike moments
+% of different images appear. As well, the algorithm is entirely
+% deterministic.  
+% The major drawback of this algorithm is the slow performance.  For an nxn
+% image, the algorithm took XXX seconds to complete.
 %% 7) List of source functions
