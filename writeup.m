@@ -9,23 +9,24 @@
 % local search region.
 %%
 % 
-% <<images/weight_formula.PNG>>
+% <<../images/weight_formula.PNG>>
 % 
 % Each weight value is normalized by the sum of all weights for the pixels
 % in a region:
 %%
 % 
-% <<images/normalize_weights.PNG>>
+% <<../images/normalize_weights.PNG>>
 % 
 % The filtered pixel value is given by:
 %%
 % 
-% <<images/filtered_pixel_formula.PNG>>
+% <<../images/filtered_formula.PNG>>
+%
 % where u(i) is a unfiltered pixel value, NL(u) is the filtered pixel value
 % Zernike moments are calculated with the following equations:
 %%
 % 
-% <<images/zernkie_formula.PNG>>
+% <<../images/zernike_formula.PNG>>
 % 
 % This is filter evaluated on a circular region of pixels with radius r, and x, y are
 % given by x = dx / r, y = dy / r, where dx and dy are the distance in
@@ -33,16 +34,16 @@
 % the values of x and y are within the unit circle:
 %%
 % 
-% <<images/unit_circle.PNG>>
+% <<../images/unit_circle.PNG>>
 % 
 % 
 %%
 % 
-% <<images/V_pq_formula.PNG>>
+% <<../images/V_pq_formula.PNG>>
 % 
 %%
 % 
-% <<images/R_pq_formula.PNG>>
+% <<../images/R_pq_formula.PNG>>
 % 
 % The calculated zernkie moments are normalized according to the equation:
 
@@ -73,3 +74,10 @@
 % The major drawback of this algorithm is the slow performance.  For an nxn
 % image, the algorithm took XXX seconds to complete.
 %% 7) List of source functions
+
+%%
+% 
+% <html>
+% <a href="../evaluate_weight.m">code</a>
+% </html>
+% 
