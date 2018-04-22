@@ -1,0 +1,275 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>1) Problem Formulation</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-04-22"><meta name="DC.source" content="main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>1) Problem Formulation</h1><!--introduction--><p>A method is required to filter out noise in textured images</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">2) Proposed Solution</a></li><li><a href="#9">3) Data Sources</a></li><li><a href="#10">4) Solution</a></li><li><a href="#11">5) Visualization</a></li><li><a href="#12">6) Analysis and conclusions</a></li><li><a href="#13">7) List of source functions</a></li></ul></div><h2 id="1">2) Proposed Solution</h2><p>The proposed algorithm calculates 6 Zernkie moments of different orders for of each pixel in the image. It uses these values to apply a non-local means filter on the image. For each pixel in the image, the zernkie values are used to calculate a weight for the similarity between a pixel and every other pixel in a local search region.</p><p><img vspace="5" hspace="5" src="../images/weight_formula.PNG" alt=""> </p><p>Each weight value is normalized by the sum of all weights for the pixels in a region:</p><p><img vspace="5" hspace="5" src="../images/normalize_weights.PNG" alt=""> </p><p>The filtered pixel value is given by:</p><p><img vspace="5" hspace="5" src="../images/filtered_formula.PNG" alt=""> </p><p>where u(i) is a unfiltered pixel value, NL(u) is the filtered pixel value Zernike moments are calculated with the following equations:</p><p><img vspace="5" hspace="5" src="../images/zernike_formula.PNG" alt=""> </p><p>This is filter evaluated on a circular region of pixels with radius r, and x, y are given by x = dx / r, y = dy / r, where dx and dy are the distance in pixels of each pixel to the center of the region.  This is done so that the values of x and y are within the unit circle:</p><p><img vspace="5" hspace="5" src="../images/unit_circle.PNG" alt=""> </p><p><img vspace="5" hspace="5" src="../images/V_pq_formula.PNG" alt=""> </p><p><img vspace="5" hspace="5" src="../images/R_pq_formula.PNG" alt=""> </p><h2 id="9">3) Data Sources</h2><p>The test image used was Lena.  The image is then corrupted with WGN noise with variance between 5, and 100.</p><pre class="codeinput">clc;
+close <span class="string">all</span>;
+
+original = imread(<span class="string">'lena_256x256.ppm'</span>);
+original = original(:,:,1);
+</pre><h2 id="10">4) Solution</h2><pre class="codeinput"><span class="comment">% Add white gaussian noise</span>
+sigma = [5, 10, 20, 30, 50, 75, 100] / 100;
+p = [0, 1, 2, 2, 3, 3];
+q = [0, 1, 0, 2, 1, 3];
+noisy_image = imnoise(original, <span class="string">'gaussian'</span>, 0, 0.005);
+
+<span class="comment">% Compute the various Zernike moments and use them to denoise the image</span>
+tic;
+[newImage, moments] = Zernike_moment(noisy_image, p, q);
+timeTaken = toc;
+
+<span class="comment">% Calculate the psnr of the noisy image compared to the filtered image</span>
+noisy_image_psnr = psnr(noisy_image, original);
+filtered_image_psnr = psnr(newImage, original);
+</pre><h2 id="11">5) Visualization</h2><pre class="codeinput">figure()
+imshow(original)
+title(<span class="string">'Original'</span>)
+
+figure()
+imshow(noisy_image)
+title(<span class="string">'Noisy Image'</span>)
+
+displayZernikeMoments(moments, p, q);
+
+figure()
+imshow(newImage);
+title(<span class="string">'Image after Zernike Moment Filtering Applied'</span>);
+</pre><img vspace="5" hspace="5" src="main_01.png" alt=""> <img vspace="5" hspace="5" src="main_02.png" alt=""> <img vspace="5" hspace="5" src="main_03.png" alt=""> <img vspace="5" hspace="5" src="main_04.png" alt=""> <img vspace="5" hspace="5" src="main_05.png" alt=""> <img vspace="5" hspace="5" src="main_06.png" alt=""> <img vspace="5" hspace="5" src="main_07.png" alt=""> <img vspace="5" hspace="5" src="main_08.png" alt=""> <img vspace="5" hspace="5" src="main_09.png" alt=""> <h2 id="12">6) Analysis and conclusions</h2><p>We were able to reproduce the filtering effects on the image Lena.jpg. The paper reported a PSNR of 32.29 for their method w, when applied on a noisy image with PSNR of 22.16.</p><pre class="codeinput">noisy_image_psnr
+filtered_image_psnr
+
+<span class="comment">% The algorithm is fairly predictable in terms of how the zernike moments</span>
+<span class="comment">% of different images appear. As well, the algorithm is entirely</span>
+<span class="comment">% deterministic.</span>
+<span class="comment">% The major drawback of this algorithm is the slow performance.  For a</span>
+<span class="comment">% 256x256 image, the algorithm took the following length of time to</span>
+<span class="comment">% complete:</span>
+timeTaken
+</pre><pre class="codeoutput">
+noisy_image_psnr =
+
+   23.0234
+
+
+filtered_image_psnr =
+
+   25.8005
+
+
+timeTaken =
+
+   2.6979e-05
+
+</pre><h2 id="13">7) List of source functions</h2><p>
+<a href="../Zernike_moment.m">Zernike_moment</a>
+</p><p>
+<a href="../R_pq.m">R_pq</a>
+</p><p>
+<a href="../weightNormalized.m">weightNormalized</a>
+</p><p>
+<a href="../evaluate_weight.m">evaluate_weight</a>
+</p><p>
+<a href="../evaluate_simularity.m">evaluate_simularity</a>
+</p><p>
+<a href="../displayZernikeMoments.m">displayZernikeMoments</a>
+</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% 1) Problem Formulation
+% A method is required to filter out noise in textured images
+%% 2) Proposed Solution
+% The proposed algorithm calculates 6 Zernkie moments of different orders 
+% for of each pixel in the image. It uses these values to apply a non-local 
+% means filter on the image.  
+% For each pixel in the image, the zernkie values are used to calculate a 
+% weight for the similarity between a pixel and every other pixel in a 
+% local search region.
+%%
+% 
+% <<../images/weight_formula.PNG>>
+% 
+% Each weight value is normalized by the sum of all weights for the pixels
+% in a region:
+%%
+% 
+% <<../images/normalize_weights.PNG>>
+% 
+% The filtered pixel value is given by:
+%%
+% 
+% <<../images/filtered_formula.PNG>>
+%
+% where u(i) is a unfiltered pixel value, NL(u) is the filtered pixel value
+% Zernike moments are calculated with the following equations:
+%%
+% 
+% <<../images/zernike_formula.PNG>>
+% 
+% This is filter evaluated on a circular region of pixels with radius r, and x, y are
+% given by x = dx / r, y = dy / r, where dx and dy are the distance in
+% pixels of each pixel to the center of the region.  This is done so that
+% the values of x and y are within the unit circle:
+%%
+% 
+% <<../images/unit_circle.PNG>>
+% 
+% 
+%%
+% 
+% <<../images/V_pq_formula.PNG>>
+% 
+%%
+% 
+% <<../images/R_pq_formula.PNG>>
+% 
+%% 3) Data Sources
+% The test image used was Lena.  The image is then corrupted with WGN noise
+% with variance between 5, and 100.
+clc;
+close all;
+
+original = imread('lena_256x256.ppm');
+original = original(:,:,1);
+
+%% 4) Solution
+
+% Add white gaussian noise
+sigma = [5, 10, 20, 30, 50, 75, 100] / 100;
+p = [0, 1, 2, 2, 3, 3];
+q = [0, 1, 0, 2, 1, 3];
+noisy_image = imnoise(original, 'gaussian', 0, 0.005);
+
+% Compute the various Zernike moments and use them to denoise the image
+tic;
+% [newImage, moments] = Zernike_moment(noisy_image, p, q);
+timeTaken = toc;
+
+% Calculate the psnr of the noisy image compared to the filtered image
+% noisy_image_psnr = psnr(noisy_image, original);
+% filtered_image_psnr = psnr(newImage, original);
+%% 5) Visualization
+
+figure()
+imshow(original)
+title('Original')
+
+figure()
+imshow(noisy_image)
+title('Noisy Image')
+
+displayZernikeMoments(moments, p, q);
+
+figure()
+imshow(newImage);
+title('Image after Zernike Moment Filtering Applied');
+%% 6) Analysis and conclusions
+% We were able to reproduce the filtering effects on the image Lena.jpg.
+% The paper reported a PSNR of 32.29 for their method w, when applied on a 
+% noisy image with PSNR of 22.16.
+
+noisy_image_psnr
+filtered_image_psnr
+
+% The algorithm is fairly predictable in terms of how the zernike moments
+% of different images appear. As well, the algorithm is entirely
+% deterministic.  
+% The major drawback of this algorithm is the slow performance.  For a
+% 256x256 image, the algorithm took the following length of time to
+% complete:
+timeTaken
+%% 7) List of source functions
+
+%%
+%
+% <html>
+% <a href="../Zernike_moment.m">Zernike_moment</a>
+% </html>
+% 
+% 
+% <html>
+% <a href="../R_pq.m">R_pq</a>
+% </html>
+% 
+% 
+% <html>
+% <a href="../weightNormalized.m">weightNormalized</a>
+% </html>
+% 
+% 
+% <html>
+% <a href="../evaluate_weight.m">evaluate_weight</a>
+% </html>
+% 
+% 
+% <html>
+% <a href="../evaluate_simularity.m">evaluate_simularity</a>
+% </html>
+% 
+% <html>
+% <a href="../displayZernikeMoments.m">displayZernikeMoments</a>
+% </html>
+% 
+##### SOURCE END #####
+--></body></html>
